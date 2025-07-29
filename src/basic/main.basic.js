@@ -1,25 +1,12 @@
-// 상수 정의
-const PRODUCT_IDS = {
-  KEYBOARD: 'p1',
-  MOUSE: 'p2',
-  MONITOR_ARM: 'p3',
-  LAPTOP_CASE: 'p4',
-  SPEAKER: 'p5',
-};
-
-const DISCOUNT_RATES = {
-  BULK_PURCHASE_THRESHOLD: 10,
-  TUESDAY_DISCOUNT: 0.1,
-  LIGHTNING_SALE_DISCOUNT: 0.2,
-  SUGGESTION_DISCOUNT: 0.05,
-};
-
-const POINT_RATES = {
-  BASE_RATE: 0.001, // 구매액의 0.1%
-  TUESDAY_MULTIPLIER: 2,
-  KEYBOARD_MOUSE_BONUS: 50,
-  FULL_SET_BONUS: 100,
-};
+// 상수 import
+import {
+  PRODUCT_IDS,
+  DISCOUNT_RATES,
+  POINT_RATES,
+  STOCK_THRESHOLDS,
+  TIME_INTERVALS,
+  DAYS_OF_WEEK,
+} from './constants.js';
 
 // 전역 변수들
 var prodList;
@@ -252,19 +239,19 @@ function main() {
   }
   onUpdateSelectOptions();
   handleCalculateCartStuff();
-  lightningDelay = Math.random() * 10000;
+  lightningDelay = Math.random() * TIME_INTERVALS.LIGHTNING_SALE_INITIAL_DELAY;
   setTimeout(() => {
     setInterval(function () {
       var luckyIdx = Math.floor(Math.random() * prodList.length);
       var luckyItem = prodList[luckyIdx];
       if (luckyItem.q > 0 && !luckyItem.onSale) {
-        luckyItem.val = Math.round((luckyItem.originalVal * 80) / 100);
+        luckyItem.val = Math.round(luckyItem.originalVal * (1 - DISCOUNT_RATES.LIGHTNING_SALE_DISCOUNT));
         luckyItem.onSale = true;
         alert('⚡번개세일! ' + luckyItem.name + '이(가) 20% 할인 중입니다!');
         onUpdateSelectOptions();
         doUpdatePricesInCart();
       }
-    }, 30000);
+    }, TIME_INTERVALS.LIGHTNING_SALE_DELAY);
   }, lightningDelay);
   setTimeout(function () {
     setInterval(function () {
@@ -284,14 +271,14 @@ function main() {
         }
         if (suggest) {
           alert('💝 ' + suggest.name + '은(는) 어떠세요? 지금 구매하시면 5% 추가 할인!');
-          suggest.val = Math.round((suggest.val * (100 - 5)) / 100);
+          suggest.val = Math.round(suggest.val * (1 - DISCOUNT_RATES.SUGGESTION_DISCOUNT));
           suggest.suggestSale = true;
           onUpdateSelectOptions();
           doUpdatePricesInCart();
         }
       }
-    }, 60000);
-  }, Math.random() * 20000);
+    }, TIME_INTERVALS.SUGGESTION_DELAY);
+  }, Math.random() * TIME_INTERVALS.LIGHTNING_SALE_INITIAL_DELAY);
 }
 var sum;
 function onUpdateSelectOptions() {
@@ -333,7 +320,7 @@ function onUpdateSelectOptions() {
       sel.appendChild(opt);
     })();
   }
-  if (totalStock < 50) {
+  if (totalStock < STOCK_THRESHOLDS.TOTAL_STOCK_WARNING) {
     sel.style.borderColor = 'orange';
   } else {
     sel.style.borderColor = '';
@@ -370,7 +357,7 @@ function handleCalculateCartStuff() {
   itemDiscounts = [];
   lowStockItems = [];
   for (idx = 0; idx < prodList.length; idx++) {
-    if (prodList[idx].q < 5 && prodList[idx].q > 0) {
+    if (prodList[idx].q < STOCK_THRESHOLDS.LOW_STOCK_WARNING && prodList[idx].q > 0) {
       lowStockItems.push(prodList[idx].name);
     }
   }
@@ -435,7 +422,7 @@ function handleCalculateCartStuff() {
     discRate = (subTot - totalAmt) / subTot;
   }
   const today = new Date();
-  var isTuesday = today.getDay() === 2;
+  var isTuesday = today.getDay() === DAYS_OF_WEEK.TUESDAY;
   var tuesdaySpecial = document.getElementById('tuesday-special');
   if (isTuesday) {
     if (totalAmt > 0) {
@@ -551,7 +538,7 @@ function handleCalculateCartStuff() {
   stockMsg = '';
   for (var stockIdx = 0; stockIdx < prodList.length; stockIdx++) {
     var item = prodList[stockIdx];
-    if (item.q < 5) {
+    if (item.q < STOCK_THRESHOLDS.LOW_STOCK_WARNING) {
       if (item.q > 0) {
         stockMsg = stockMsg + item.name + ': 재고 부족 (' + item.q + '개 남음)\n';
       } else {
@@ -582,9 +569,9 @@ var doRenderBonusPoints = function () {
     finalPoints = basePoints;
     pointsDetail.push('기본: ' + basePoints + 'p');
   }
-  if (new Date().getDay() === 2) {
+  if (new Date().getDay() === DAYS_OF_WEEK.TUESDAY) {
     if (basePoints > 0) {
-      finalPoints = basePoints * 2;
+      finalPoints = basePoints * POINT_RATES.TUESDAY_MULTIPLIER;
       pointsDetail.push('화요일 2배');
     }
   }
@@ -610,19 +597,19 @@ var doRenderBonusPoints = function () {
     }
   }
   if (hasKeyboard && hasMouse) {
-    finalPoints = finalPoints + 50;
+    finalPoints = finalPoints + POINT_RATES.KEYBOARD_MOUSE_BONUS;
     pointsDetail.push('키보드+마우스 세트 +50p');
   }
   if (hasKeyboard && hasMouse && hasMonitorArm) {
-    finalPoints = finalPoints + 100;
+    finalPoints = finalPoints + POINT_RATES.FULL_SET_BONUS;
     pointsDetail.push('풀세트 구매 +100p');
   }
   if (itemCnt >= 30) {
-    finalPoints = finalPoints + 100;
+    finalPoints = finalPoints + POINT_RATES.FULL_SET_BONUS;
     pointsDetail.push('대량구매(30개+) +100p');
   } else {
     if (itemCnt >= 20) {
-      finalPoints = finalPoints + 50;
+      finalPoints = finalPoints + POINT_RATES.KEYBOARD_MOUSE_BONUS;
       pointsDetail.push('대량구매(20개+) +50p');
     } else {
       if (itemCnt >= 10) {
@@ -669,7 +656,7 @@ var handleStockInfoUpdate = function () {
   if (totalStock < 30) {
   }
   prodList.forEach(function (item) {
-    if (item.q < 5) {
+    if (item.q < STOCK_THRESHOLDS.LOW_STOCK_WARNING) {
       if (item.q > 0) {
         infoMsg = infoMsg + item.name + ': 재고 부족 (' + item.q + '개 남음)\n';
       } else {

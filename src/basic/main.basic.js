@@ -14,6 +14,7 @@ import { calculateCart } from './utils/cartUtils.js';
 
 // 컴포넌트 import
 import { createHeader } from './components/Header.js';
+import { createProductSelector } from './components/ProductSelector.js';
 
 // 전역 변수들
 let prodList;
@@ -28,7 +29,6 @@ function main() {
   let header;
   let gridContainer;
   let leftColumn;
-  let selectorContainer;
   let rightColumn;
   let manualToggle;
   let manualOverlay;
@@ -84,27 +84,17 @@ function main() {
   ];
   root = document.getElementById('app');
   header = createHeader();
-  sel = document.createElement('select');
-  sel.id = 'product-select';
+  const productSelector = createProductSelector();
+  sel = productSelector.select;
+  addBtn = productSelector.addButton;
+  stockInfo = productSelector.stockInfo;
+
   gridContainer = document.createElement('div');
   leftColumn = document.createElement('div');
   leftColumn['className'] = 'bg-white border border-gray-200 p-8 overflow-y-auto';
-  selectorContainer = document.createElement('div');
-  selectorContainer.className = 'mb-6 pb-6 border-b border-gray-200';
-  sel.className = 'w-full p-3 border border-gray-300 rounded-lg text-base mb-3';
   gridContainer.className = 'grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6 flex-1 overflow-hidden';
-  addBtn = document.createElement('button');
-  stockInfo = document.createElement('div');
-  addBtn.id = 'add-to-cart';
-  stockInfo.id = 'stock-status';
-  stockInfo.className = 'text-xs text-red-500 mt-3 whitespace-pre-line';
-  addBtn.innerHTML = 'Add to Cart';
-  addBtn.className =
-    'w-full py-3 bg-black text-white text-sm font-medium uppercase tracking-wider hover:bg-gray-800 transition-all';
-  selectorContainer.appendChild(sel);
-  selectorContainer.appendChild(addBtn);
-  selectorContainer.appendChild(stockInfo);
-  leftColumn.appendChild(selectorContainer);
+
+  leftColumn.appendChild(productSelector.container);
   cartDisp = document.createElement('div');
   leftColumn.appendChild(cartDisp);
   cartDisp.id = 'cart-items';

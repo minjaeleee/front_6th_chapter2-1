@@ -240,19 +240,3 @@ function updateDiscountInfo(discRate, originalTotal, totalAmount) {
     `;
   }
 }
-
-// 재고 정보 업데이트
-function updateStockInfo(productList) {
-  let stockMsg = '';
-  for (let stockIdx = 0; stockIdx < productList.length; stockIdx++) {
-    const item = productList[stockIdx];
-    if (item.q < STOCK_THRESHOLDS.LOW_STOCK_WARNING) {
-      if (item.q > 0) {
-        stockMsg = stockMsg + item.name + ': 재고 부족 (' + item.q + '개 남음)\n';
-      } else {
-        stockMsg = stockMsg + item.name + ': 품절\n';
-      }
-    }
-  }
-  document.getElementById('stock-status').textContent = stockMsg;
-}

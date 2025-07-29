@@ -1,6 +1,7 @@
 import { PRODUCT_IDS, STOCK_THRESHOLDS, DAYS_OF_WEEK } from '../constants.js';
 import { renderBonusPoints } from './pointUtils.js';
 import { updateStockInfo } from './stockUtils.js';
+import { updateItemCount } from '../components/Header.js';
 
 // 장바구니 계산 및 업데이트
 export function calculateCart(productList, cartDisplay) {
@@ -87,7 +88,7 @@ export function calculateCart(productList, cartDisplay) {
   }
 
   // 아이템 카운트 업데이트
-  document.getElementById('item-count').textContent = '🛍️ ' + itemCount + ' items in cart';
+  updateItemCount(itemCount);
   window.itemCnt = itemCount;
 
   // 주문 요약 업데이트

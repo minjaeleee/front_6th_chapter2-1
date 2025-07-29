@@ -12,6 +12,9 @@ import {
 import { updateProductSelectOptions } from './utils/productUtils.js';
 import { calculateCart } from './utils/cartUtils.js';
 
+// 컴포넌트 import
+import { createHeader } from './components/Header.js';
+
 // 전역 변수들
 let prodList;
 let stockInfo;
@@ -80,13 +83,7 @@ function main() {
     },
   ];
   root = document.getElementById('app');
-  header = document.createElement('div');
-  header.className = 'mb-8';
-  header.innerHTML = `
-    <h1 class="text-xs font-medium tracking-extra-wide uppercase mb-2">🛒 Hanghae Online Store</h1>
-    <div class="text-5xl tracking-tight leading-none">Shopping Cart</div>
-    <p id="item-count" class="text-sm text-gray-500 font-normal mt-3">🛍️ 0 items in cart</p>
-  `;
+  header = createHeader();
   sel = document.createElement('select');
   sel.id = 'product-select';
   gridContainer = document.createElement('div');

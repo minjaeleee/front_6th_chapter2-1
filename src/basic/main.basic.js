@@ -14,13 +14,10 @@ import { calculateCart } from './utils/cartUtils.js';
 
 // 전역 변수들
 let prodList;
-let bonusPts = 0;
 let stockInfo;
-let itemCnt;
 let lastSel;
 let sel;
 let addBtn;
-let totalAmt = 0;
 let cartDisp;
 
 function main() {
@@ -34,8 +31,6 @@ function main() {
   let manualOverlay;
   let manualColumn;
   let lightningDelay;
-  totalAmt = 0;
-  itemCnt = 0;
   lastSel = null;
   prodList = [
     {
@@ -147,7 +142,7 @@ function main() {
       <span id="points-notice">Earn loyalty points with purchase.</span>
     </p>
   `;
-  sum = rightColumn.querySelector('#cart-total');
+
   manualToggle = document.createElement('button');
   manualToggle.onclick = function () {
     manualOverlay.classList.toggle('hidden');
@@ -285,7 +280,6 @@ function main() {
     }, TIME_INTERVALS.SUGGESTION_DELAY);
   }, Math.random() * TIME_INTERVALS.LIGHTNING_SALE_INITIAL_DELAY);
 }
-var sum;
 
 function doUpdatePricesInCart() {
   let totalCount = 0;

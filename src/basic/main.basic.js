@@ -13,12 +13,8 @@ import { updateProductSelectOptions } from './utils/productUtils.js';
 import { calculateCart } from './utils/cartUtils.js';
 
 // 컴포넌트 import
-import { createHeader } from './components/Header.js';
-import { createProductSelector } from './components/ProductSelector.js';
-import { createCartDisplay, createCartItem } from './components/CartDisplay.js';
-import { createOrderSummary } from './components/OrderSummary.js';
-import { createHelpModal } from './components/HelpModal.js';
-import { createLayout } from './components/Layout.js';
+import { createApp } from './components/App.js';
+import { createCartItem } from './components/CartDisplay.js';
 
 // 전역 변수들
 let prodList;
@@ -85,32 +81,18 @@ function main() {
       suggestSale: false,
     },
   ];
-  root = document.getElementById('app');
-  header = createHeader();
-  const productSelector = createProductSelector();
-  sel = productSelector.select;
-  addBtn = productSelector.addButton;
-  stockInfo = productSelector.stockInfo;
-
-  const layout = createLayout();
-  gridContainer = layout.container;
-  leftColumn = layout.leftColumn;
-
-  leftColumn.appendChild(productSelector.container);
-  cartDisp = createCartDisplay();
-  leftColumn.appendChild(cartDisp);
-  rightColumn = createOrderSummary();
-
-  const helpModal = createHelpModal();
-  manualToggle = helpModal.toggle;
-  manualOverlay = helpModal.overlay;
-
-  gridContainer.appendChild(leftColumn);
-  gridContainer.appendChild(rightColumn);
-  root.appendChild(header);
-  root.appendChild(gridContainer);
-  root.appendChild(manualToggle);
-  root.appendChild(manualOverlay);
+  const app = createApp();
+  root = app.root;
+  header = app.header;
+  sel = app.productSelector.select;
+  addBtn = app.productSelector.addButton;
+  stockInfo = app.productSelector.stockInfo;
+  cartDisp = app.cartDisplay;
+  gridContainer = app.layout.container;
+  leftColumn = app.layout.leftColumn;
+  rightColumn = app.orderSummary;
+  manualToggle = app.helpModal.toggle;
+  manualOverlay = app.helpModal.overlay;
   var initStock = 0;
   for (var i = 0; i < prodList.length; i++) {
     initStock += prodList[i].q;

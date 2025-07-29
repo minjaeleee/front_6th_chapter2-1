@@ -18,6 +18,7 @@ import { createProductSelector } from './components/ProductSelector.js';
 import { createCartDisplay, createCartItem } from './components/CartDisplay.js';
 import { createOrderSummary } from './components/OrderSummary.js';
 import { createHelpModal } from './components/HelpModal.js';
+import { createLayout } from './components/Layout.js';
 
 // 전역 변수들
 let prodList;
@@ -91,10 +92,9 @@ function main() {
   addBtn = productSelector.addButton;
   stockInfo = productSelector.stockInfo;
 
-  gridContainer = document.createElement('div');
-  leftColumn = document.createElement('div');
-  leftColumn['className'] = 'bg-white border border-gray-200 p-8 overflow-y-auto';
-  gridContainer.className = 'grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6 flex-1 overflow-hidden';
+  const layout = createLayout();
+  gridContainer = layout.container;
+  leftColumn = layout.leftColumn;
 
   leftColumn.appendChild(productSelector.container);
   cartDisp = createCartDisplay();

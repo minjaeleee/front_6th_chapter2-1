@@ -2,22 +2,14 @@ import { PRODUCT_IDS, POINT_RATES, DAYS_OF_WEEK } from '../constants.js';
 
 // 보너스 포인트 계산 및 렌더링
 export function renderBonusPoints(productList, cartDisplay, totalAmount, itemCount) {
-  let basePoints;
-  let finalPoints;
-  let pointsDetail;
-  let hasKeyboard;
-  let hasMouse;
-  let hasMonitorArm;
-  let nodes;
-
   if (cartDisplay.children.length === 0) {
     document.getElementById('loyalty-points').style.display = 'none';
     return;
   }
 
-  basePoints = Math.floor(totalAmount / 1000);
-  finalPoints = 0;
-  pointsDetail = [];
+  const basePoints = Math.floor(totalAmount / 1000);
+  let finalPoints = 0;
+  const pointsDetail = [];
 
   if (basePoints > 0) {
     finalPoints = basePoints;
@@ -31,12 +23,11 @@ export function renderBonusPoints(productList, cartDisplay, totalAmount, itemCou
     }
   }
 
-  hasKeyboard = false;
-  hasMouse = false;
-  hasMonitorArm = false;
-  nodes = cartDisplay.children;
+  let hasKeyboard = false;
+  let hasMouse = false;
+  let hasMonitorArm = false;
 
-  for (const node of nodes) {
+  for (const node of cartDisplay.children) {
     let product = null;
     for (let pIdx = 0; pIdx < productList.length; pIdx++) {
       if (productList[pIdx].id === node.id) {
@@ -80,15 +71,12 @@ export function renderBonusPoints(productList, cartDisplay, totalAmount, itemCou
     }
   }
 
-  // 전역 변수 업데이트
-  window.bonusPts = finalPoints;
-
   const ptsTag = document.getElementById('loyalty-points');
   if (ptsTag) {
-    if (window.bonusPts > 0) {
+    if (finalPoints > 0) {
       ptsTag.innerHTML =
         '<div>적립 포인트: <span class="font-bold">' +
-        window.bonusPts +
+        finalPoints +
         'p</span></div>' +
         '<div class="text-2xs opacity-70 mt-1">' +
         pointsDetail.join(', ') +

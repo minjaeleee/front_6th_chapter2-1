@@ -1,12 +1,5 @@
 // 상수 import
-import {
-  PRODUCT_IDS,
-  DISCOUNT_RATES,
-  POINT_RATES,
-  STOCK_THRESHOLDS,
-  TIME_INTERVALS,
-  DAYS_OF_WEEK,
-} from './constants.js';
+import { PRODUCT_IDS, DISCOUNT_RATES, TIME_INTERVALS } from './constants.js';
 
 // 유틸리티 함수 import
 import { updateProductSelectOptions } from './utils/productUtils.js';
@@ -96,8 +89,6 @@ function main() {
   }, lightningDelay);
   setTimeout(function () {
     setInterval(function () {
-      if (cartDisp.children.length === 0) {
-      }
       if (lastSel) {
         var suggest = null;
         for (var k = 0; k < prodList.length; k++) {
@@ -123,9 +114,7 @@ function main() {
 }
 
 function doUpdatePricesInCart() {
-  let j = 0;
-  let cartItems;
-  cartItems = cartDisp.children;
+  const cartItems = cartDisp.children;
   for (let i = 0; i < cartItems.length; i++) {
     const itemId = cartItems[i].id;
     let product = null;
@@ -175,14 +164,7 @@ main();
 
 addBtn.addEventListener('click', function () {
   const selItem = sel.value;
-  let hasItem = false;
-  for (let idx = 0; idx < prodList.length; idx++) {
-    if (prodList[idx].id === selItem) {
-      hasItem = true;
-      break;
-    }
-  }
-  if (!selItem || !hasItem) {
+  if (!selItem) {
     return;
   }
   let itemToAdd = null;
@@ -244,8 +226,6 @@ cartDisp.addEventListener('click', function (event) {
       const remQty = parseInt(qtyElem.textContent);
       prod.q += remQty;
       itemElem.remove();
-    }
-    if (prod && prod.q < 5) {
     }
     calculateCart(prodList, cartDisp);
     updateProductSelectOptions(prodList, sel);

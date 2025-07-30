@@ -50,3 +50,70 @@ export function updateProductSelectOptions(productList, productSelect) {
     productSelect.style.borderColor = '';
   }
 }
+
+// ===== 상품 관련 공통 함수들 =====
+
+/**
+ * 상품 ID로 상품을 찾는 함수
+ * @param {Array} productList - 상품 목록
+ * @param {string} productId - 찾을 상품 ID
+ * @returns {Object|null} 찾은 상품 객체 또는 null
+ */
+export function findProductById(productList, productId) {
+  for (let i = 0; i < productList.length; i++) {
+    if (productList[i].id === productId) {
+      return productList[i];
+    }
+  }
+  return null;
+}
+
+/**
+ * 상품의 재고가 있는지 확인하는 함수
+ * @param {Object} product - 상품 객체
+ * @returns {boolean} 재고 여부
+ */
+export function hasStock(product) {
+  return product && product.q > 0;
+}
+
+/**
+ * 상품이 할인 중인지 확인하는 함수
+ * @param {Object} product - 상품 객체
+ * @returns {boolean} 할인 여부
+ */
+export function isOnSale(product) {
+  return product && (product.onSale || product.suggestSale);
+}
+
+/**
+ * 상품의 할인 상태에 따른 이름 접두사 반환
+ * @param {Object} product - 상품 객체
+ * @returns {string} 이름 접두사
+ */
+export function getProductNamePrefix(product) {
+  if (product.onSale && product.suggestSale) {
+    return '⚡💝';
+  } else if (product.onSale) {
+    return '⚡';
+  } else if (product.suggestSale) {
+    return '💝';
+  }
+  return '';
+}
+
+/**
+ * 상품의 할인 상태에 따른 가격 색상 클래스 반환
+ * @param {Object} product - 상품 객체
+ * @returns {string} CSS 클래스명
+ */
+export function getPriceColorClass(product) {
+  if (product.onSale && product.suggestSale) {
+    return 'text-purple-600';
+  } else if (product.onSale) {
+    return 'text-red-500';
+  } else if (product.suggestSale) {
+    return 'text-blue-500';
+  }
+  return '';
+}

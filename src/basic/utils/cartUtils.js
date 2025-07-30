@@ -3,6 +3,52 @@ import { renderBonusPoints } from './pointUtils.js';
 import { updateStockInfo } from './stockUtils.js';
 import { updateItemCount } from '../components/Header.js';
 
+// ===== 장바구니 관련 공통 함수들 =====
+
+/**
+ * 장바구니 아이템의 수량을 가져오는 함수
+ * @param {Element} cartItem - 장바구니 아이템 요소
+ * @returns {number} 수량
+ */
+export function getCartItemQuantity(cartItem) {
+  const qtyElem = cartItem.querySelector('.quantity-number');
+  return qtyElem ? parseInt(qtyElem.textContent) : 0;
+}
+
+/**
+ * 장바구니 아이템의 수량을 설정하는 함수
+ * @param {Element} cartItem - 장바구니 아이템 요소
+ * @param {number} quantity - 설정할 수량
+ */
+export function setCartItemQuantity(cartItem, quantity) {
+  const qtyElem = cartItem.querySelector('.quantity-number');
+  if (qtyElem) {
+    qtyElem.textContent = quantity;
+  }
+}
+
+/**
+ * 장바구니에 상품이 이미 있는지 확인하는 함수
+ * @param {Element} cartDisplay - 장바구니 표시 영역
+ * @param {string} productId - 상품 ID
+ * @returns {Element|null} 장바구니 아이템 요소 또는 null
+ */
+export function findCartItem(cartDisplay, productId) {
+  return document.getElementById(productId);
+}
+
+/**
+ * 수량 변경이 유효한지 확인하는 함수
+ * @param {number} newQuantity - 새로운 수량
+ * @param {number} availableStock - 사용 가능한 재고
+ * @param {number} currentQuantity - 현재 수량
+ * @returns {boolean} 유효성 여부
+ */
+export function isValidQuantityChange(newQuantity, availableStock, currentQuantity) {
+  if (newQuantity <= 0) return true; // 삭제는 항상 허용
+  return newQuantity <= availableStock + currentQuantity;
+}
+
 // 장바구니 계산 및 업데이트
 export function calculateCart(productList, cartDisplay) {
   let cartItems = cartDisplay.children;

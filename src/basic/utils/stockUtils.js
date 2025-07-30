@@ -4,8 +4,7 @@ import { STOCK_THRESHOLDS } from '../constants.js';
 export function getStockTotal(productList) {
   let sum = 0;
   for (let i = 0; i < productList.length; i++) {
-    const currentProduct = productList[i];
-    sum += currentProduct.q;
+    sum += productList[i].q;
   }
   return sum;
 }
@@ -13,11 +12,6 @@ export function getStockTotal(productList) {
 // 재고 정보 업데이트
 export function updateStockInfo(productList, stockInfoElement) {
   let infoMsg = '';
-  const totalStock = getStockTotal(productList);
-
-  if (totalStock < 30) {
-    // 재고 부족 시 추가 로직이 필요하면 여기에 추가
-  }
 
   productList.forEach(function (item) {
     if (item.q < STOCK_THRESHOLDS.LOW_STOCK_WARNING) {

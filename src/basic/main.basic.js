@@ -18,20 +18,12 @@ import { createCartItem } from './components/CartDisplay.js';
 
 // 전역 변수들
 let prodList;
-let stockInfo;
 let lastSel;
 let sel;
 let addBtn;
 let cartDisp;
 
 function main() {
-  let root;
-  let header;
-  let gridContainer;
-  let leftColumn;
-  let rightColumn;
-  let manualToggle;
-  let manualOverlay;
   let lightningDelay;
   lastSel = null;
   prodList = [
@@ -82,21 +74,10 @@ function main() {
     },
   ];
   const app = createApp();
-  root = app.root;
-  header = app.header;
   sel = app.productSelector.select;
   addBtn = app.productSelector.addButton;
-  stockInfo = app.productSelector.stockInfo;
   cartDisp = app.cartDisplay;
-  gridContainer = app.layout.container;
-  leftColumn = app.layout.leftColumn;
-  rightColumn = app.orderSummary;
-  manualToggle = app.helpModal.toggle;
-  manualOverlay = app.helpModal.overlay;
-  var initStock = 0;
-  for (var i = 0; i < prodList.length; i++) {
-    initStock += prodList[i].q;
-  }
+
   updateProductSelectOptions(prodList, sel);
   calculateCart(prodList, cartDisp);
   lightningDelay = Math.random() * TIME_INTERVALS.LIGHTNING_SALE_INITIAL_DELAY;
@@ -142,18 +123,8 @@ function main() {
 }
 
 function doUpdatePricesInCart() {
-  let totalCount = 0;
   let j = 0;
   let cartItems;
-  while (cartDisp.children[j]) {
-    const qty = cartDisp.children[j].querySelector('.quantity-number');
-    totalCount += qty ? parseInt(qty.textContent) : 0;
-    j++;
-  }
-  totalCount = 0;
-  for (j = 0; j < cartDisp.children.length; j++) {
-    totalCount += parseInt(cartDisp.children[j].querySelector('.quantity-number').textContent);
-  }
   cartItems = cartDisp.children;
   for (let i = 0; i < cartItems.length; i++) {
     const itemId = cartItems[i].id;

@@ -11,6 +11,7 @@
     "start:advanced": "vite serve --open ./index.advanced.html",
     "build:advanced": "vite build",
     "deploy": "npm run build:advanced && gh-pages -d dist",
+    "gh-pages": "pnpm build && gh-pages -d dist",
     "test": "vitest",
     "test:basic": "vitest basic.test.js",
     "test:advanced": "vitest advanced.test.js",

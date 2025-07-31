@@ -4,6 +4,18 @@ import { PRODUCTS } from '../../lib/products';
 const ProductPicker = () => {
   const [selectedProductId, setSelectedProductId] = useState<string>('');
 
+  // 상품의 할인 상태에 따른 이름 접두사 반환 (기본 버전과 동일)
+  const getProductNamePrefix = (product: any) => {
+    if (product.onSale && product.suggestSale) {
+      return '⚡💝';
+    } else if (product.onSale) {
+      return '⚡';
+    } else if (product.suggestSale) {
+      return '💝';
+    }
+    return '';
+  };
+
   // 바닐라 JS의 handleAddToCart 함수와 동일한 로직을 React로 구현
   const handleAddToCart = () => {
     if (!selectedProductId) {
@@ -61,13 +73,14 @@ const ProductPicker = () => {
       'grid grid-cols-[80px_1fr_auto] gap-5 py-5 border-b border-gray-100 first:pt-0 last:border-b-0 last:pb-0';
 
     const priceDisplay = `₩${product.price.toLocaleString()}`;
+    const namePrefix = getProductNamePrefix(product);
 
     itemElement.innerHTML = `
       <div class="w-20 h-20 bg-gradient-black relative overflow-hidden">
         <div class="absolute top-1/2 left-1/2 w-[60%] h-[60%] bg-white/10 -translate-x-1/2 -translate-y-1/2 rotate-45"></div>
       </div>
       <div>
-        <h3 class="text-base font-normal mb-1 tracking-tight">${product.name}</h3>
+        <h3 class="text-base font-normal mb-1 tracking-tight">${namePrefix}${product.name}</h3>
         <p class="text-xs text-gray-500 mb-0.5 tracking-wide">PRODUCT</p>
         <p class="text-xs text-black mb-3">${priceDisplay}</p>
         <div class="flex items-center gap-4">
@@ -213,9 +226,11 @@ const ProductPicker = () => {
             totalAmount += itemTotal;
             itemCount += quantity;
 
+            const namePrefix = getProductNamePrefix(product);
+
             summaryDetails.innerHTML += `
               <div class="flex justify-between text-xs tracking-wide text-gray-400">
-                <span>${product.name} x ${quantity}</span>
+                <span>${namePrefix}${product.name} x ${quantity}</span>
                 <span>₩${itemTotal.toLocaleString()}</span>
               </div>
             `;
@@ -290,11 +305,15 @@ const ProductPicker = () => {
         onChange={(e) => setSelectedProductId(e.target.value)}
       >
         <option value="">상품을 선택하세요</option>
-        {PRODUCTS.filter((product) => product.quantity > 0).map((product) => (
-          <option key={product.id} value={product.id}>
-            {product.name} - ₩{product.price.toLocaleString()}
-          </option>
-        ))}
+        {PRODUCTS.filter((product) => product.quantity > 0).map((product) => {
+          const namePrefix = getProductNamePrefix(product);
+          return (
+            <option key={product.id} value={product.id}>
+              {namePrefix}
+              {product.name} - ₩{product.price.toLocaleString()}
+            </option>
+          );
+        })}
       </select>
       <button
         className="w-full py-3 bg-black text-white text-sm font-medium uppercase tracking-wider hover:bg-gray-800 transition-all"

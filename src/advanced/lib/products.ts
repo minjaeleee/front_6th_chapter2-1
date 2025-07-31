@@ -5,7 +5,7 @@ export const PRODUCTS = [
     discountPrice: 10000,
     price: 10000,
     quantity: 50,
-    onSale: false,
+    onSale: true,
     suggestSale: false,
     discountRate: 0.1,
   },
@@ -16,7 +16,7 @@ export const PRODUCTS = [
     price: 20000,
     quantity: 30,
     onSale: false,
-    suggestSale: false,
+    suggestSale: true,
     discountRate: 0.15,
   },
   {
@@ -25,8 +25,8 @@ export const PRODUCTS = [
     discountPrice: 30000,
     price: 30000,
     quantity: 20,
-    onSale: false,
-    suggestSale: false,
+    onSale: true,
+    suggestSale: true,
     discountRate: 0.2,
   },
   {

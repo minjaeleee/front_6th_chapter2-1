@@ -1,33 +1,36 @@
-import { fileURLToPath, URL } from 'node:url';
-
-import react from '@vitejs/plugin-react';
+import fs from 'fs';
+import path from 'path';
 import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
-export default defineConfig(({ command }) => ({
-  // 개발 모드에서는 '/', 프로덕션 빌드에서는 GitHub Pages 경로
-  base: command === 'serve' ? '/' : '/front_6th_chapter2-1/',
+// 1.
+const base = process.env.NODE_ENV === 'production' ? '/front_6th_chapter2-1/' : '';
 
-  plugins: [react()],
+const entryFileName = 'index.advanced.html';
 
-  // 빌드 설정
+export default defineConfig({
+  base,
+  //2.
   build: {
-    outDir: 'dist',
     rollupOptions: {
-      input: {
-        main: 'index.advanced.html',
+      input: path.resolve(__dirname, entryFileName),
+    },
+  },
+  plugins: [
+    react(),
+    //3.
+    {
+      name: 'rename-html-output',
+      closeBundle() {
+        const from = path.resolve(__dirname, `dist/${entryFileName}`);
+        const to = path.resolve(__dirname, 'dist/index.html');
+        if (fs.existsSync(from)) fs.renameSync(from, to);
       },
     },
-  },
-
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src/advanced', import.meta.url)),
-    },
-  },
-
+  ],
   test: {
     globals: true,
     environment: 'jsdom',
-    setupFiles: ['./src/setupTests.js'],
+    setupFiles: 'src/setupTests.js',
   },
-}));
+});
